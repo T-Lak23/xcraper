@@ -7,33 +7,39 @@ import {
   LockKeyhole,
   Mail,
   Sparkles,
+  User,
 } from "lucide-react";
-
 import { useAuthStore } from "../store/auth.store";
 import { Loader } from "../components/ui/Loader";
 
-const Login = () => {
-  const { login, loginError, isAuthLoding, clearLoginError } = useAuthStore();
+const Register = () => {
+  const { register, loginError, isAuthLoding, clearLoginError } =
+    useAuthStore();
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      await login(formData.email, formData.password);
+      await register(formData.email, formData.password, formData.name);
+
       navigate("/chat");
     } catch {}
   };
 
-  const handleChange = (field: "email" | "password", value: string) => {
+  const handleChange = (
+    field: "name" | "email" | "password",
+    value: string,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -54,11 +60,11 @@ const Login = () => {
             </div>
 
             <h1 className="text-3xl font-bold tracking-tight text-slate-100">
-              Welcome back
+              Create your account
             </h1>
 
             <p className="mt-2 text-sm text-slate-400">
-              Sign in to continue to your account
+              Start chatting with your documents and the web
             </p>
           </div>
 
@@ -74,7 +80,35 @@ const Login = () => {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-medium text-slate-300"
+                >
+                  Full name
+                </label>
+
+                <div className="group relative">
+                  <User
+                    size={18}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-blue-400"
+                  />
+
+                  <input
+                    id="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    placeholder="John Doe"
+                    autoComplete="name"
+                    required
+                    disabled={isAuthLoding}
+                    className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -104,14 +138,12 @@ const Login = () => {
               </div>
 
               <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-slate-300"
-                  >
-                    Password
-                  </label>
-                </div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-sm font-medium text-slate-300"
+                >
+                  Password
+                </label>
 
                 <div className="group relative">
                   <LockKeyhole
@@ -124,8 +156,8 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={(e) => handleChange("password", e.target.value)}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
+                    placeholder="Create a password"
+                    autoComplete="new-password"
                     required
                     disabled={isAuthLoding}
                     className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-12 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
@@ -145,16 +177,18 @@ const Login = () => {
                 </div>
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isAuthLoding}
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isAuthLoding ? (
-                  <Loader label="Signing in..." />
+                  <Loader label="Creating account..." />
                 ) : (
                   <>
-                    <span>Sign in</span>
+                    <span>Create account</span>
+
                     <ArrowRight
                       size={17}
                       className="transition-transform group-hover:translate-x-0.5"
@@ -166,13 +200,13 @@ const Login = () => {
           </div>
 
           <p className="mt-6 text-center text-sm text-slate-500">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <button
               type="button"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               className="font-medium text-blue-400 transition hover:text-blue-300"
             >
-              Sign up
+              Sign in
             </button>
           </p>
 
@@ -185,4 +219,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

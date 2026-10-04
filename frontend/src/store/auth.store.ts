@@ -11,6 +11,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   loginError: string | null;
   getUser: () => Promise<void>;
   clearLoginError: () => void;
@@ -74,6 +75,30 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
+  register: async (email, password, name) => {
+    try {
+      const response = await api.post("/auth/register", {
+        email,
+        password,
+        name,
+      });
+      get().setUser(response.data.user);
+      set({ isAuthenticated: true });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        set({
+          loginError: error.response?.data?.message ?? "Login failed",
+        });
+      } else {
+        set({
+          loginError: "Login failed",
+        });
+      }
+      throw error;
+    } finally {
+      set({ isAuthLoding: false });
+    }
+  },
   getUser: async () => {
     try {
       const response = await api.get("/auth/me");

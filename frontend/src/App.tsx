@@ -6,6 +6,7 @@ import { RedirectedRoute } from "./components/guards/RedirectedRoute";
 import { ProtectedRoute } from "./components/guards/ProtectedRoute";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/auth.store";
+import Register from "./pages/Register";
 
 const App = () => {
   const { getUser } = useAuthStore();
@@ -20,6 +21,7 @@ const App = () => {
     <Routes>
       <Route element={<RedirectedRoute />}>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
 
       <Route path="/" element={<HomePage />} />
