@@ -11,3 +11,7 @@ body {
     Roboto,
     sans-serif;
 }
+
+body {
+  @apply bg-slate-950;
+}
