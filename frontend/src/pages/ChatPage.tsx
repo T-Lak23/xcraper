@@ -133,6 +133,7 @@ const ChatPage = () => {
       );
 
       setFile(null);
+      setQuery("");
 
       const aiResponse = await askQuestion({
         query: trimmedQuery,
@@ -140,8 +141,6 @@ const ChatPage = () => {
       });
 
       addMessage(aiResponse.message);
-
-      setQuery("");
 
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
