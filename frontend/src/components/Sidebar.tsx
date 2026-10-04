@@ -7,8 +7,6 @@ const Sidebar = ({
   onClose,
   handleCreateConversation,
   isConversationLoading,
-  conversationError,
-  setErrorNull,
   conversations,
   handleLogout,
 }: {

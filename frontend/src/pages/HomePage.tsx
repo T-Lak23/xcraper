@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  Check,
   FileText,
   Globe,
   MessageSquare,
@@ -95,7 +94,7 @@ const HomePage = () => {
                   <div className="ml-3 h-2 w-32 rounded-full bg-slate-800" />
                 </div>
 
-                <div className="grid min-h-[280px] grid-cols-1 md:grid-cols-[180px_1fr]">
+                <div className="grid min-h-70 grid-cols-1 md:grid-cols-[180px_1fr]">
                   <div className="hidden border-r border-slate-800 p-4 md:block">
                     <div className="mb-5 h-2 w-20 rounded bg-slate-800" />
                     <div className="space-y-3">
