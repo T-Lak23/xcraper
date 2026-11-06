@@ -9,36 +9,43 @@
 
 //   return text;
 // };
-
+import {env} from "../config/env.js"
 
 export const scrapeFromUrl = async (url: string): Promise<string> => {
   try {
-    console.log("Starting Jina scrape:", url);
+    const apiKey = env.JINA_API_KEY;
 
-    const jinaUrl = `https://r.jina.ai/${url}`;
+    if (!apiKey) {
+      throw new Error("JINA_API_KEY is missing");
+    }
 
-    const response = await fetch(jinaUrl, {
+    const response = await fetch(`https://r.jina.ai/${url}`, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        Accept: "text/plain",
+      },
       signal: AbortSignal.timeout(60000),
     });
 
-    console.log("Jina response status:", response.status);
-
     const text = await response.text();
-
-    console.log("Jina response preview:", text.slice(0, 500));
 
     if (!response.ok) {
       throw new Error(
-        `Jina returned ${response.status}: ${text.slice(0, 300)}`
+        `Jina Reader failed (${response.status}): ${text.slice(0, 500)}`
       );
+    }
+
+    if (!text.trim()) {
+      throw new Error("Jina returned empty content");
     }
 
     return text;
   } catch (error) {
-    console.error("Jina scraping error:", error);
+    console.error("URL scraping failed:", error);
     throw error;
   }
 };
+
 
 export const extractUrls = (text: string): string[] => {
   const urlRegex = /https?:\/\/[^\s]+/g;
